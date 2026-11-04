@@ -1463,7 +1463,6 @@ def main():
     encabezado()
     mostrar_aviso()
     pantallas[pantalla]()
-main()
 
 
 main()
