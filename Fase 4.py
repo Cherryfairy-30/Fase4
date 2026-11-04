@@ -5,6 +5,7 @@ import datetime
 import string
 import html
 import unicodedata
+import base64
 import streamlit as st
 
 # Paleta de colores ===========================================================
@@ -561,6 +562,8 @@ header[data-testid="stHeader"] { background: transparent; }
   align-items: center; gap: 1rem; flex-wrap: wrap; box-shadow: 0 6px 18px rgba(17,63,88,.25); }
 .banner-titulo { color: #fff; font-size: 1.6rem; font-weight: 800; letter-spacing: .3px; }
 .banner-sub { color: var(--claro); opacity: .85; font-size: .95rem; margin-top: .15rem; }
+.banner-marca { display: flex; align-items: center; gap: 1rem; }
+.banner-logo { height: 58px; width: auto; border-radius: 8px; }
 .usuario { background: rgba(246,247,247,.15); color: #fff; border: 1px solid rgba(246,247,247,.45);
   border-radius: 999px; padding: .35rem .9rem; font-size: .85rem; }
 
@@ -624,6 +627,17 @@ hr { border-color: var(--gris) !important; opacity: .4; }
 </style>
 """
 
+ARCHIVO_LOGO = "logo.png"
+
+def logo_en_base64():
+    if not os.path.exists(ARCHIVO_LOGO):
+        return ""
+
+    archivo = open(ARCHIVO_LOGO, "rb")
+    datos = base64.b64encode(archivo.read()).decode("utf-8")
+    archivo.close()
+    return datos
+
 def aplicar_estilos():
     st.markdown(ESTILOS, unsafe_allow_html=True)
 
@@ -631,9 +645,16 @@ def encabezado():
     usuario = ""
     if st.session_state.usuario != "":
         usuario = '<span class="usuario">👤 ' + html.escape(st.session_state.usuario) + '</span>'
+
+    imagen = ""
+    logo = logo_en_base64()
+    if logo != "":
+        imagen = '<img class="banner-logo" src="data:image/png;base64,' + logo + '">'
+
     st.markdown(
-        '<div class="banner"><div><div class="banner-titulo">🏗️ Obras, Materiales y Herramientas</div>'
-        '<div class="banner-sub">Sistema de gestión de construcción</div></div>' + usuario + '</div>',
+        '<div class="banner"><div class="banner-marca">' + imagen +
+        '<div><div class="banner-titulo">Modus</div>'
+        '<div class="banner-sub">Obras, materiales y herramientas</div></div></div>' + usuario + '</div>',
         unsafe_allow_html=True
     )
 
@@ -1425,7 +1446,11 @@ def pantalla_herr_editar():
 
 #Programa Principal==================================================================================================================================================================
 def main():
-    st.set_page_config(page_title="Obras, materiales y herramientas", page_icon="🏗️")
+    if os.path.exists(ARCHIVO_LOGO):
+        icono = ARCHIVO_LOGO
+    else:
+        icono = "🏗️"
+    st.set_page_config(page_title="Modus", page_icon=icono)
     aplicar_estilos()
     iniciar_estado()
 
@@ -1463,6 +1488,5 @@ def main():
     encabezado()
     mostrar_aviso()
     pantallas[pantalla]()
-
 
 main()
