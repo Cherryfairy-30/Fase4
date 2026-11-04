@@ -806,7 +806,7 @@ def pantalla_inicio():
     st.header("Inicio")
     st.write("Bienvenido. Inicie sesión para administrar obras, materiales y herramientas.")
     st.button("Iniciar sesión", key="inicio_login", on_click=ir_a, args=("login",))
-    st.button("Finalizar sesión", key="inicio_fin", on_click=finalizar_sesion)
+    
 
 def mostrar_requisitos():
     terminaciones = ""
